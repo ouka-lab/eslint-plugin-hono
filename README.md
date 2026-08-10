@@ -2,100 +2,75 @@
 
 🔥 ESLint plugin for [Hono](https://hono.dev/) and all Hono lovers
 
-## ⚠️ Still in alpha version ⚠️
-
-In order for this plugin to become a major release, it's extremely important that you experiment with it. 
-
-Please try it out and incorporate it into your Hono project. 
-
-Please also create issues with any bugs, improvement requests, and new feature suggestions.
-
 ## Installation
 
 ```bash
-npm install -D eslint-plugin-hono@alpha
+npm install -D eslint-plugin-hono
 ```
 
-## Usage (Flat Config)
+Requires ESLint 9 or later (flat config).
 
-To use the recommended configuration, create an `eslint.config.js` file in your project root and add the following:
+## Usage
+
+Add the recommended configuration to your `eslint.config.js`:
 
 ```javascript
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
 import hono from "eslint-plugin-hono";
 
 export default [
-    {
-        plugins: {
-            hono: hono,
-        },
-    },
-    pluginJs.configs.recommended,
-    ...tseslint.configs.recommended,
-    ...hono.configs.recommended,
-    {
-        files: ["**/*.{ts,tsx,cts,mts}"],
-        languageOptions: {
-            parser: tseslint.parser,
-            parserOptions: {
-                ecmaVersion: "latest",
-                sourceType: "module",
-                project: "./tsconfig.json",
-            },
-            globals: globals.node,
-        },
-    },
+    hono.configs.recommended,
 ];
 ```
 
-If you want to apply the rules only to specific files, you can use the `files` property:
+The config registers the plugin for you — there is no need to declare `plugins` yourself.
+
+To enable every rule, including the stylistic and runtime-specific ones, use `all` instead:
 
 ```javascript
-import globals from "globals";
-import pluginJs from "@eslint/js";
+import hono from "eslint-plugin-hono";
+
+export default [
+    hono.configs.all,
+];
+```
+
+To apply the rules only to specific files, or to tweak individual rules, spread the config and add your own entry after it:
+
+```javascript
 import tseslint from "typescript-eslint";
 import hono from "eslint-plugin-hono";
 
 export default [
-    {
-        plugins: {
-            hono: hono,
-        },
-    },
-    pluginJs.configs.recommended,
     ...tseslint.configs.recommended,
-    ...hono.configs.recommended,
     {
-        files: ["**/*.{ts,tsx,cts,mts}"],
-        languageOptions: {
-            parser: tseslint.parser,
-            parserOptions: {
-                ecmaVersion: "latest",
-                sourceType: "module",
-                project: "./tsconfig.json",
-            },
-            globals: globals.node,
-        },
+        ...hono.configs.recommended,
+        files: ["src/**/*.ts"],
+    },
+    {
+        files: ["src/**/*.ts"],
         rules: {
-            // custom rules
-        }
+            "hono/no-process-env": "error",
+            "hono/route-grouping": "warn",
+        },
     },
 ];
 ```
 
 ## Rules
 
-| Rule | ⚠️ warn | 🚨 error | 🔧 fix |
+✅ = enabled in `recommended`. All rules are enabled in `all`.
+
+| Rule | ✅ | Severity in `all` | 🔧 fix |
 | :--- | :---: | :---: | :---: |
-| [route-grouping](#hono-route-grouping) | | ✅ | ✅ |
-| [prefer-http-exception](#hono-prefer-http-exception) | ✅ | | |
-| [param-name-mismatch](#hono-param-name-mismatch) | | ✅ | |
-| [no-multiple-next](#hono-no-multiple-next) | | ✅ | |
-| [no-unused-context-response](#hono-no-unused-context-response) | | ✅ | |
-| [no-process-env](#hono-no-process-env) | ✅ | | |
-| [global-middleware-placement](#hono-global-middleware-placement) | ✅ | | |
+| [param-name-mismatch](#honoparam-name-mismatch) | ✅ | 🚨 error | |
+| [no-multiple-next](#honono-multiple-next) | ✅ | 🚨 error | |
+| [no-unused-context-response](#honono-unused-context-response) | ✅ | 🚨 error | |
+| [prefer-http-exception](#honoprefer-http-exception) | ✅ | ⚠️ warn | |
+| [route-grouping](#honoroute-grouping) | | ⚠️ warn | ✅ |
+| [no-process-env](#honono-process-env) | | ⚠️ warn | |
+| [global-middleware-placement](#honoglobal-middleware-placement) | | ⚠️ warn | |
+
+`recommended` deliberately contains only the rules that catch real bugs and are safe for any Hono project. Stylistic rules (`route-grouping`, `global-middleware-placement`) and runtime-specific ones (`no-process-env` — `process.env` is perfectly valid on Node.js, Bun and Deno) are left out so that adding this plugin to an existing project does not flood it with errors.
 
 ### hono/route-grouping
 
@@ -112,7 +87,7 @@ This rule enhances code organization by checking three things:
 
 ```json
 {
-  "hono/route-grouping": ["error", {
+  "hono/route-grouping": ["warn", {
     "order": [
       "use",
       "all",
@@ -365,4 +340,4 @@ app.get('/admin/dashboard', (c) => c.text('Dashboard'));
 
 # License
 
-Made by [Kanon](https://github.com/ysknsid25). Publish under [MIT License](https://github.com/ysknsid25/eslint-plugin-citty/blob/master/LICENSE).
+Made by [Kanon](https://github.com/ysknsid25). Publish under [MIT License](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/LICENSE).
