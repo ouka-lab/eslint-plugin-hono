@@ -1,0 +1,27 @@
+name: Setup Node.js and npm
+description: Set up Node.js and install a version-pinned, checksum-verified npm.
+
+inputs:
+  node-version:
+    description: Node.js version to set up.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Install pinned npm
+      shell: bash
+      env:
+        NPM_VERSION: 11.17.0
+        NPM_SHA512: 3eeaf18997b11070d313849268b23766b9db0068997dec9471073170fe43fa17f2b4d0337bf0f52330ee2274e7f5754b21b01052742e48f5c9c74d8b1e32ef43
+      run: |
+        set -euo pipefail
+        curl -fsSL -o "$RUNNER_TEMP/npm.tgz" "https://registry.npmjs.org/npm/-/npm-${NPM_VERSION}.tgz"
+        echo "${NPM_SHA512}  $RUNNER_TEMP/npm.tgz" | sha512sum -c -
+        npm install -g --ignore-scripts "$RUNNER_TEMP/npm.tgz"
+        npm --version

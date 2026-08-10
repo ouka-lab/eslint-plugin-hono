@@ -24,7 +24,9 @@ updates:
         update-types:
           - "version-update:semver-major"
   - package-ecosystem: github-actions
-    directory: /
+    directories:
+      - "/.github/workflows"
+      - "/.github/actions/setup-node-npm"
     schedule:
       interval: weekly
       day: "saturday"
