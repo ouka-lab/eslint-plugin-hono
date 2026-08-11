@@ -167,7 +167,8 @@ if (args.has('--json')) {
 if (args.has('--write')) {
   if (tableInSync) {
     console.log('README rules table is already up to date.');
-  } else {
+  }
+  else {
     writeFileSync(readmePath, updated);
     console.log(`Rewrote the rules table in README.md (${rules.length} rules).`);
   }
