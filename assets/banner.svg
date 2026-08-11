@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300">
+<defs><linearGradient id="fo" x1="0" y1="1" x2="0" y2="0">
+<stop offset="0%" stop-color="#E5321B"/><stop offset="100%" stop-color="#FF5A1F"/>
+</linearGradient>
+<linearGradient id="fm" x1="0" y1="1" x2="0" y2="0">
+<stop offset="0%" stop-color="#FF7A00"/><stop offset="100%" stop-color="#FFA033"/>
+</linearGradient>
+<linearGradient id="fi" x1="0" y1="1" x2="0" y2="0">
+<stop offset="0%" stop-color="#FFC93D"/><stop offset="100%" stop-color="#FFE873"/>
+</linearGradient>
+<radialGradient id="nodeglow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#9C8CFF" stop-opacity="0.9"/><stop offset="100%" stop-color="#9C8CFF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glow" cx="50%" cy="55%" r="60%">
+<stop offset="0%" stop-color="#F77F00" stop-opacity="0.25"/><stop offset="100%" stop-color="#F77F00" stop-opacity="0"/>
+</radialGradient></defs>
+<rect width="1200" height="300" fill="#0B0B12"/>
+<circle cx="190" cy="150" r="220" fill="url(#glow)"/>
+<g transform="translate(35,3) scale(0.56)">
+<g transform="translate(-42.75,48.75) scale(0.55)">
+<path d="M355,75
+C420,150 455,215 452,290
+C450,345 470,395 500,455
+C520,400 530,330 520,255
+C560,300 580,380 578,455
+C592,520 590,570 570,620
+C540,680 470,715 400,715
+C330,715 258,682 228,622
+C210,585 205,548 212,512
+C230,530 252,540 272,540
+C245,505 235,455 245,370
+C262,420 285,450 300,462
+C296,400 306,330 322,270
+C334,222 344,145 355,75
+Z" fill="url(#fo)"/>
+<path d="M368,175
+C410,240 425,300 420,355
+C418,405 435,450 462,500
+C480,455 490,400 484,350
+C512,395 528,455 526,505
+C536,555 532,595 512,632
+C482,682 440,700 400,702
+C345,702 292,678 268,630
+C252,598 250,568 256,538
+C272,556 292,566 312,566
+C292,530 288,480 296,430
+C312,470 330,492 344,502
+C340,450 348,390 358,340
+C366,290 362,222 368,175
+Z" fill="url(#fm)"/>
+<path d="M384,315
+C412,370 420,420 414,462
+C410,505 424,545 444,580
+C462,620 456,652 430,672
+C400,694 356,692 328,672
+C302,652 296,620 308,592
+C324,608 344,612 360,606
+C340,580 334,545 342,512
+C356,540 372,552 384,558
+C374,510 372,450 378,400
+C382,362 380,336 384,315
+Z" fill="url(#fi)"/>
+</g>
+<g stroke="#8A7CFF" stroke-linecap="round">
+<line x1="392" y1="90.0" x2="392" y2="442.0" stroke-width="5"/>
+<line x1="376" y1="90.0" x2="408" y2="90.0" stroke-width="6"/>
+<line x1="376" y1="178.0" x2="408" y2="178.0" stroke-width="5"/>
+<line x1="376" y1="266.0" x2="408" y2="266.0" stroke-width="5"/>
+<line x1="376" y1="354.0" x2="408" y2="354.0" stroke-width="5"/>
+<line x1="376" y1="442.0" x2="408" y2="442.0" stroke-width="6"/>
+<line x1="383" y1="134.0" x2="401" y2="134.0" stroke-width="3" opacity="0.7"/>
+<line x1="383" y1="222.0" x2="401" y2="222.0" stroke-width="3" opacity="0.7"/>
+<line x1="383" y1="310.0" x2="401" y2="310.0" stroke-width="3" opacity="0.7"/>
+<line x1="383" y1="398.0" x2="401" y2="398.0" stroke-width="3" opacity="0.7"/>
+</g>
+<line x1="152.5" y1="90.0" x2="392" y2="90.0" stroke="#8A7CFF" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.9"/>
+<circle cx="392" cy="90.0" r="20" fill="url(#nodeglow)"/>
+<circle cx="392" cy="90.0" r="7" fill="#C9C1FF"/>
+</g>
+<text x="330" y="172" font-family="SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace" font-size="72" font-weight="700">
+<tspan fill="#B7ACFF">eslint-plugin-</tspan><tspan fill="#FF9B42">hono</tspan>
+</text>
+</svg>

@@ -1,4 +1,6 @@
-# eslint-plugin-hono
+<img src="./assets/banner.svg" alt="eslint-plugin-hono" width="100%">
+
+---
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-hono.svg)](https://www.npmjs.com/package/eslint-plugin-hono)
 [![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-hono.svg)](https://www.npmjs.com/package/eslint-plugin-hono)
@@ -6,6 +8,7 @@
 [![Test](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml)
 [![Lint and Format](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml)
 [![License: MIT](https://img.shields.io/npm/l/eslint-plugin-hono.svg)](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/LICENSE)
+
 
 🔥 ESLint plugin for [Hono](https://hono.dev/) and all Hono lovers
 
