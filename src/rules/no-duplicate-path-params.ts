@@ -89,8 +89,9 @@ function getRoutePath(node: TSESTree.Node): string | null {
   }
 
   if (node.type === 'TemplateLiteral' && node.quasis.length === 1) {
-    const raw = node.quasis[0].value.cooked;
-    return raw.startsWith('/') ? raw : null;
+    // `cooked` is null when the template holds an invalid escape sequence.
+    const cooked = node.quasis[0].value.cooked;
+    return cooked && cooked.startsWith('/') ? cooked : null;
   }
 
   return null;

@@ -63,9 +63,19 @@ ruleTester.run(
       const app = new Hono();
       app.get(\`/users/\${prefix}/:id/:id\`, (c) => c.text('ok'));
     `,
+      // A tagged template is not a route path. It is also the only place where
+      // the parser produces a null `cooked`, so reading it must stay guarded.
+      `
+      const app = new Hono();
+      app.get(sql\`/users/:id/:id\`, (c) => c.text('ok'));
+    `,
       // Not a route path: does not start with '/'
       `
       cache.get('foo::bar::bar');
+    `,
+      // Same, written as a template literal
+      `
+      cache.get(\`foo::bar::bar\`);
     `,
       // A bare ':' is not a param
       `
