@@ -6,7 +6,7 @@ Disallow declaring the same path parameter name twice in a route path.
 
 Hono accepts a path like `/users/:id/posts/:id` without complaint, but the duplicate name is not an error you find out about at startup — it silently collapses. Only the first `:id` is captured, so `c.req.param('id')` always returns the user id and the post id is unreachable. Nothing throws and nothing 404s; the route simply reads the wrong value forever. This rule catches the typo where you meant two different names.
 
-The check looks at a single path string only, so it covers the path passed to `get`, `post`, `put`, `patch`, `delete`, `options`, `all`, `use`, `on`, `route` and `basePath`. Paths composed across `app.route()` boundaries are not analysed, because the sub app usually lives in another file.
+The check looks at a single path string only, so it covers the path passed to `get`, `post`, `put`, `patch`, `delete`, `options`, `all`, `use`, `on`, `route`, `mount` and `basePath`. Paths composed across `app.route()` boundaries are not analysed, because the sub app usually lives in another file.
 
 ## Examples
 

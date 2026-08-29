@@ -182,6 +182,14 @@ ruleTester.run(
       `,
         errors: [{ messageId: 'duplicateParam' }],
       },
+      // mount(): the base path of a foreign application handler
+      {
+        code: `
+        const app = new Hono();
+        app.mount('/a/:id/:id', anotherApp);
+      `,
+        errors: [{ messageId: 'duplicateParam' }],
+      },
       // basePath
       {
         code: `

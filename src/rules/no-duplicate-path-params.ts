@@ -18,6 +18,7 @@ const PATH_ARG_INDEX: Record<string, number> = {
   all: 0,
   use: 0,
   route: 0,
+  mount: 0,
   basePath: 0,
   on: 1,
 };
