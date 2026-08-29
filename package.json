@@ -64,6 +64,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@hono/cli": "^0.1.11",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/node": "^22.10.1",
         "@typescript-eslint/utils": "^8.66.0",

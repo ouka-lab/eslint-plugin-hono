@@ -85,6 +85,54 @@ audit script imports the build output.
 `npm run lint` inside `playground/` exits non-zero **by design**; the samples
 are deliberately broken. The audit script is the pass/fail gate.
 
+## Hono CLI
+
+The `hono` CLI ([honojs/cli](https://github.com/honojs/cli)) is installed
+globally in this environment. Use it instead of guessing at Hono's behavior or
+reaching for a web search — it is the fastest way to check what Hono actually
+does before writing or changing a rule.
+
+```bash
+hono search <query>   # Search hono.dev (JSON by default; -p for human output, -l for more hits)
+hono docs [path]      # Print a documentation page, e.g. hono docs /docs/api/context
+hono request [file]   # Send a request through app.request() without starting a server
+hono serve [entry]    # Start a server for a Hono app (--show-routes lists registered routes)
+hono optimize [entry] # Build an optimized/bundled Hono app
+```
+
+### Where it helps in this repo
+
+- **Before adding or changing a rule** — confirm the API the rule targets is
+  real and still shaped the way you think:
+  `hono search "createMiddleware" -p`, then `hono docs /docs/helpers/factory`.
+  The documented behavior is what the rule's docs page and error message should
+  describe.
+- **Deciding `recommended` vs `all`** — the docs tell you whether a pattern is a
+  genuine bug or a runtime-specific/stylistic preference, which is exactly the
+  line `recommended` draws.
+- **Validating a playground sample** — `playground/` is a real Hono project, so
+  `hono request -P /some/path playground/src/<name>.ts` shows whether the code
+  the rule flags actually misbehaves at runtime, and
+  `hono serve --show-routes playground/src/<name>.ts` shows how Hono registers
+  its routes. This complements the audit script, which only checks that the
+  rule fires.
+- **Writing docs pages** — `hono docs <path>` gives canonical wording and the
+  upstream URL to link to from `docs/rules/<name>.md`.
+
+Piping works, so a search result can be read directly:
+
+```bash
+hono search "middleware" | jq -r '.results[0].path' | xargs hono docs
+```
+
+### When stuck, ask the CLI
+
+The CLI is young and gains commands and flags between releases, so this section
+can fall behind. **Run `hono --help` and `hono <command> --help` whenever you
+need something that is not listed above** — check whether a subcommand or flag
+already does the job before writing a script or a one-off harness. `hono -v`
+shows the installed version.
+
 ## Required checks before finishing
 
 Before reporting any local work as done, run all four and confirm they pass
