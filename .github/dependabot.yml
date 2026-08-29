@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
 version: 2
 updates:
   - package-ecosystem: npm
@@ -21,6 +22,50 @@ updates:
           - "*"
     ignore:
       - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+  # The playground exists to prove the plugin still works against the current
+  # Hono release, so hono is tracked here including major versions. The tooling
+  # around it follows the same major-version freeze as the root project.
+  - package-ecosystem: npm
+    directories:
+      - "/playground"
+    schedule:
+      interval: weekly
+      day: "saturday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    labels:
+      - "dependabot:playground"
+    commit-message:
+      prefix: "dependabot:playground"
+    groups:
+      hono:
+        patterns:
+          - "hono"
+      playground-deps:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "hono"
+        update-types:
+          - "patch"
+          - "minor"
+    ignore:
+      # Listed individually rather than as "*" so that hono keeps receiving
+      # major-version PRs.
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "eslint"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "typescript-eslint"
         update-types:
           - "version-update:semver-major"
   - package-ecosystem: github-actions

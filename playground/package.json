@@ -1,0 +1,20 @@
+{
+  "name": "eslint-plugin-hono-playground",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Runnable Hono samples for trying out eslint-plugin-hono's rules. Never published.",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "audit": "node ../.claude/skills/rule-playground/scripts/audit-playground.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "eslint": "^10.8.1",
+    "eslint-plugin-hono": "file:..",
+    "hono": "^4.10.6",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.66.0"
+  }
+}
