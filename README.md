@@ -77,6 +77,7 @@ Each rule links to its own documentation page.
 | Rule | Description | ✅ | Severity in `all` | 🔧 |
 | :--- | :--- | :---: | :---: | :---: |
 | [param-name-mismatch](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/param-name-mismatch.md) | Ensure parameter name in `c.req.param()` matches the route definition | ✅ | 🚨 error | |
+| [no-duplicate-path-params](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-duplicate-path-params.md) | Disallow declaring the same path parameter name twice in one route path (`/users/:id/posts/:id`) | ✅ | 🚨 error | |
 | [no-multiple-next](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-multiple-next.md) | Disallow multiple calls to `next()` in a single middleware execution path | ✅ | 🚨 error | |
 | [no-unused-context-response](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-unused-context-response.md) | Disallow unused calls to Context response methods (`c.json`, `c.text`, etc.) | ✅ | 🚨 error | |
 | [prefer-http-exception](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/prefer-http-exception.md) | Suggest using `HTTPException` instead of generic `Error` for HTTP errors | ✅ | ⚠️ warn | |
