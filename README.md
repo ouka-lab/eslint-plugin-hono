@@ -7,6 +7,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/ouka-lab/eslint-plugin-hono)](https://github.com/ouka-lab/eslint-plugin-hono/commits/master)
 [![Test](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml)
 [![Lint and Format](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/ouka-lab/eslint-plugin-hono?utm_source=oss&utm_medium=github&utm_campaign=ouka-lab%2Feslint-plugin-hono&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 [![License: MIT](https://img.shields.io/npm/l/eslint-plugin-hono.svg)](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/LICENSE)
 
 
