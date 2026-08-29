@@ -23,61 +23,57 @@ const PATH_ARG_INDEX: Record<string, number> = {
   on: 1,
 };
 
-const NAME_CHAR = /[a-zA-Z0-9_]/;
+/**
+ * Hono's own parameter grammar (`getPattern` in `hono/utils/url`): a parameter
+ * takes a whole path segment, and its name is anything but braces, followed by
+ * an optional `{regexp}` constraint.
+ *
+ * Matching this exactly matters. Hono really does capture `/u/:user-id` as
+ * `user-id` and `/u/:a.b` as `a.b`, so a name cut short at the first non-word
+ * character would turn two distinct parameters into a false duplicate.
+ */
+const PARAM_SEGMENT = /^:([^{}]+)(?:\{.+\})?$/;
+
+/**
+ * Split a route path into segments the way Hono does, without breaking a
+ * `{regexp}` constraint that itself contains a '/'.
+ */
+function splitRoutingPath(path: string): string[] {
+  const segments: string[] = [];
+  let current = '';
+  let depth = 0;
+
+  for (const char of path) {
+    if (char === '{') depth++;
+    else if (char === '}' && depth > 0) depth--;
+
+    if (char === '/' && depth === 0) {
+      segments.push(current);
+      current = '';
+      continue;
+    }
+    current += char;
+  }
+  segments.push(current);
+
+  return segments;
+}
 
 /**
  * Collect the `:name` parameters declared in a Hono route path.
  *
- * Scanning character by character rather than with a single regex is what
- * makes `:date{\d{4}}` work: the braces of a regexp constraint nest, so the
- * constraint has to be skipped by counting them.
+ * This mirrors Hono's grammar rather than approximating it, because a name the
+ * scanner truncates turns two distinct parameters into a false duplicate.
  */
 function extractPathParams(path: string): string[] {
   const params: string[] = [];
-  let i = 0;
 
-  while (i < path.length) {
-    if (path[i] !== ':') {
-      i++;
-      continue;
-    }
-
-    let j = i + 1;
-    while (j < path.length && NAME_CHAR.test(path[j])) j++;
-
-    if (j === i + 1) {
-      // A bare ':' with no name — not a parameter.
-      i++;
-      continue;
-    }
-
-    params.push(path.slice(i + 1, j));
-
-    if (path[j] === '{') {
-      let depth = 0;
-      while (j < path.length) {
-        const char = path[j];
-        if (char === '\\') {
-          j += 2;
-          continue;
-        }
-        if (char === '{') {
-          depth++;
-        }
-        else if (char === '}') {
-          depth--;
-          if (depth === 0) {
-            j++;
-            break;
-          }
-        }
-        j++;
-      }
-    }
-
-    if (path[j] === '?') j++;
-
-    i = j;
+  for (const segment of splitRoutingPath(path)) {
+    const match = PARAM_SEGMENT.exec(segment);
+    if (!match) continue;
+    // `/posts/:id?` captures the key as `id`, so the optional marker is not
+    // part of the name.
+    params.push(match[1].replace(/\?$/, ''));
   }
 
   return params;

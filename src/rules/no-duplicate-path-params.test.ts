@@ -33,6 +33,26 @@ ruleTester.run(
       const app = new Hono();
       app.get('/posts/:id/:id2', (c) => c.text('ok'));
     `,
+      // Hono allows '-' and '.' in a parameter name, so these are two distinct
+      // parameters and must not be truncated to a shared prefix
+      `
+      const app = new Hono();
+      app.get('/u/:user-id/:user-name', (c) => c.text('ok'));
+    `,
+      `
+      const app = new Hono();
+      app.get('/u/:a.b/:a.c', (c) => c.text('ok'));
+    `,
+      // A ':' in the middle of a segment is not a parameter
+      `
+      const app = new Hono();
+      app.get('/foo:bar/:bar', (c) => c.text('ok'));
+    `,
+      // Distinct hyphenated names on a mount path
+      `
+      const app = new Hono();
+      app.mount('/a/:user-id/:user-name', anotherApp);
+    `,
       // Regexp params with distinct names
       `
       const app = new Hono();
@@ -189,6 +209,19 @@ ruleTester.run(
         app.mount('/a/:id/:id', anotherApp);
       `,
         errors: [{ messageId: 'duplicateParam' }],
+      },
+      // mount() with hyphenated names: still a genuine duplicate
+      {
+        code: `
+        const app = new Hono();
+        app.mount('/a/:user-id/b/:user-id', anotherApp);
+      `,
+        errors: [
+          {
+            message:
+                            'Route path \'/a/:user-id/b/:user-id\' declares \':user-id\' more than once. Give each path parameter a unique name.',
+          },
+        ],
       },
       // basePath
       {
