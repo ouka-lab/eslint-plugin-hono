@@ -10,6 +10,7 @@
     "audit": "node ../.claude/skills/rule-playground/scripts/audit-playground.mjs"
   },
   "devDependencies": {
+    "@hono/cli": "^0.2.0-next.0",
     "@types/node": "^22.10.1",
     "eslint": "^10.8.1",
     "eslint-plugin-hono": "file:..",
