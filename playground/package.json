@@ -14,7 +14,7 @@
     "@types/node": "^22.10.1",
     "eslint": "^10.8.1",
     "eslint-plugin-hono": "file:..",
-    "hono": "^4.10.6",
+    "hono": "^4.13.7",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.66.0"
   }
