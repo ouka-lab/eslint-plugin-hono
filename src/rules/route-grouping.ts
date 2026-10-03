@@ -46,6 +46,8 @@ export const routeGrouping = createRule<
             type: 'array',
             items: { type: 'string' },
             uniqueItems: true,
+            description: 'Specifies the desired order of HTTP methods.',
+            default: DEFAULT_ORDER,
           },
         },
         additionalProperties: false,
