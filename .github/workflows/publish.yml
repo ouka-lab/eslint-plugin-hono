@@ -1,0 +1,31 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Use Node.js 24.x
+      uses: ./.github/actions/setup-node-npm
+      with:
+        node-version: 24.x
+    - run: npm ci
+    - name: Test
+      run: npm test
+    - name: Build
+      run: npm run build
+    - name: Publish
+      run: npm publish --provenance
