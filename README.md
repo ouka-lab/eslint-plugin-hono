@@ -4,6 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-hono.svg)](https://www.npmjs.com/package/eslint-plugin-hono)
 [![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-hono.svg)](https://www.npmjs.com/package/eslint-plugin-hono)
+[![Socket Badge](https://badge.socket.dev/npm/package/eslint-plugin-hono/1.1.2)](https://badge.socket.dev/npm/package/eslint-plugin-hono/1.1.2)
 [![GitHub last commit](https://img.shields.io/github/last-commit/ouka-lab/eslint-plugin-hono)](https://github.com/ouka-lab/eslint-plugin-hono/commits/master)
 [![Test](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/test.yml)
 [![Lint and Format](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml/badge.svg)](https://github.com/ouka-lab/eslint-plugin-hono/actions/workflows/lint.yml)
