@@ -25,7 +25,8 @@
         "test": "vitest run",
         "test:coverage": "vitest run --coverage",
         "lint": "eslint .",
-        "lint:fix": "eslint . --fix"
+        "lint:fix": "eslint . --fix",
+        "ci:audit": "npm ci --ignore-scripts && npm audit signatures && npm rebuild"
     },
     "keywords": [
         "eslint",
