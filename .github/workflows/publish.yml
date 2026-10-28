@@ -28,4 +28,4 @@ jobs:
     - name: Build
       run: npm run build
     - name: Publish
-      run: npm publish --provenance
+      run: npm stage publish --provenance
