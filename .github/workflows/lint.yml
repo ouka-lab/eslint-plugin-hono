@@ -18,10 +18,10 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Use Node.js 24.x
+      - name: Use Node.js 26.x
         uses: ./.github/actions/setup-node-npm
         with:
-          node-version: 24.x
+          node-version: 26.x
 
       - run: npm run ci:audit
 
