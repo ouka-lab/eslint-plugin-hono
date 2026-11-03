@@ -21,8 +21,27 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm run ci:audit
-    - name: Test
-      run: npm test
+    - name: Restore Vitest results
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: node_modules/.vite/vitest
+        key: vitest-results-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          vitest-results-${{ github.run_id }}-
+    - name: Run tests
+      run: |
+        if ls node_modules/.vite/vitest/*/results.json >/dev/null 2>&1; then
+          npm run test:last
+        else
+          npm run test
+        fi
+
+    - name: Save Vitest results
+      if: always()
+      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: node_modules/.vite/vitest
+        key: vitest-results-${{ github.run_id }}-${{ github.run_attempt }}
 
   bun:
     runs-on: ubuntu-latest
