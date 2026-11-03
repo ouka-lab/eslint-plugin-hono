@@ -9,6 +9,7 @@ import { noProcessEnv } from './rules/no-process-env';
 import { globalMiddlewarePlacement } from './rules/global-middleware-placement';
 import { noDuplicatePathParams } from './rules/no-duplicate-path-params';
 import { noDuplicateRoutes } from './rules/no-duplicate-routes';
+import { noCommentedOutRoute } from './rules/no-commented-out-route';
 
 const rules = {
   'route-grouping': routeGrouping,
@@ -20,6 +21,7 @@ const rules = {
   'global-middleware-placement': globalMiddlewarePlacement,
   'no-duplicate-path-params': noDuplicatePathParams,
   'no-duplicate-routes': noDuplicateRoutes,
+  'no-commented-out-route': noCommentedOutRoute,
 };
 
 const withPrefix = <R extends Linter.RulesRecord>(rules: R) =>
@@ -43,6 +45,7 @@ const recommendedRules = {
   'no-multiple-next': 'error',
   'no-unused-context-response': 'error',
   'prefer-http-exception': 'warn',
+  'no-commented-out-route': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const allRules = {
@@ -55,6 +58,7 @@ const allRules = {
   'global-middleware-placement': 'warn',
   'no-duplicate-path-params': 'error',
   'no-duplicate-routes': 'error',
+  'no-commented-out-route': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const plugin = {

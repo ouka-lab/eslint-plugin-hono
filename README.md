@@ -83,6 +83,7 @@ Each rule links to its own documentation page.
 | [no-multiple-next](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-multiple-next.md) | Disallow multiple calls to `next()` in a single middleware execution path | ✅ | 🚨 error | |
 | [no-unused-context-response](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-unused-context-response.md) | Disallow unused calls to Context response methods (`c.json`, `c.text`, etc.) | ✅ | 🚨 error | |
 | [prefer-http-exception](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/prefer-http-exception.md) | Suggest using `HTTPException` instead of generic `Error` for HTTP errors | ✅ | ⚠️ warn | |
+| [no-commented-out-route](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-commented-out-route.md) | Disallow commented-out Hono routes and middleware (`app.get(...)`, `app.use(...)`, etc.) | ✅ | ⚠️ warn | |
 | [route-grouping](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/route-grouping.md) | Enforce grouping and ordering of routes by HTTP method and Hono instance | | ⚠️ warn | 🔧 |
 | [no-process-env](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-process-env.md) | Disallow the use of `process.env` in favor of `c.env` | | ⚠️ warn | |
 | [global-middleware-placement](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/global-middleware-placement.md) | Enforce that global middleware is placed before route definitions | | ⚠️ warn | |
