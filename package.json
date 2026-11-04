@@ -1,6 +1,6 @@
 {
     "name": "eslint-plugin-hono",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "ESLint plugin for Hono and all Hono lovers",
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
@@ -83,5 +83,9 @@
     "volta": {
         "node": "24.19.0",
         "npm": "11.17.0"
+    },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/ysknsid25"
     }
 }
