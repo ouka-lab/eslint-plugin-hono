@@ -12,6 +12,7 @@ import { noDuplicateRoutes } from './rules/no-duplicate-routes';
 import { noCommentedOutRoute } from './rules/no-commented-out-route';
 import { maxReturn } from './rules/max-return';
 import { validRoutePath } from './rules/valid-route-path';
+import { maxPathNameLength } from './rules/max-path-name-length';
 
 const rules = {
   'route-grouping': routeGrouping,
@@ -26,6 +27,7 @@ const rules = {
   'no-commented-out-route': noCommentedOutRoute,
   'max-return': maxReturn,
   'valid-route-path': validRoutePath,
+  'max-path-name-length': maxPathNameLength,
 };
 
 const withPrefix = <R extends Linter.RulesRecord>(rules: R) =>
@@ -50,6 +52,7 @@ const recommendedRules = {
   'no-unused-context-response': 'error',
   'prefer-http-exception': 'warn',
   'no-commented-out-route': 'warn',
+  'max-path-name-length': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const allRules = {
@@ -65,6 +68,7 @@ const allRules = {
   'no-commented-out-route': 'warn',
   'max-return': 'warn',
   'valid-route-path': 'warn',
+  'max-path-name-length': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const plugin = {
