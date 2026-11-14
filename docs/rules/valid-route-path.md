@@ -49,25 +49,25 @@ So `mustMatch` describes the general shape of a path, and `mustNotMatch` and `di
 
 ```typescript
 // { "disallowedWords": ["get"] }
-app.get('/get-users', handler);
-app.get('/users/getAll', handler);
+app.get('/get-users', (c) => c.text('ok'));
+app.get('/users/getAll', (c) => c.text('ok'));
 ```
 
 ```typescript
 // { "mustMatch": "^(/([a-z0-9]+(-[a-z0-9]+)*|:[a-zA-Z]+))*/?$" }
-app.get('/getUsers', handler);
+app.get('/getUsers', (c) => c.text('ok'));
 ```
 
 ```typescript
 // { "mustMatch": "^(/([a-z0-9]+(-[a-z0-9]+)*|:[a-zA-Z]+))*/?$", "disallowedWords": ["delete"] }
 // Reported for 'delete', although the path satisfies mustMatch
-app.get('/users/delete', handler);
+app.get('/users/delete', (c) => c.text('ok'));
 ```
 
 ```typescript
 // { "mustMatch": "^(/([a-z0-9]+(-[a-z0-9]+)*|:[a-zA-Z]+))*/?$", "mustNotMatch": "[A-Z]" }
 // Reported once, for mustNotMatch
-app.get('/Users', handler);
+app.get('/Users', (c) => c.text('ok'));
 ```
 
 **Correct**
@@ -75,7 +75,7 @@ app.get('/Users', handler);
 ```typescript
 // { "mustMatch": "^(/([a-z0-9]+(-[a-z0-9]+)*|:[a-zA-Z]+))*/?$" }
 app.get('/users/:id', (c) => c.text('ok'));
-app.post('/user-groups', handler);
+app.post('/user-groups', (c) => c.text('ok'));
 ```
 
 ```typescript
