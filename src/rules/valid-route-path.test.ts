@@ -53,6 +53,12 @@ ruleTester.run('valid-route-path', validRoutePath as unknown as import('eslint')
       code: `
         const value = map.get('Bad_Path');
         axios.get('/Bad_Path', { params: {} });
+        const config = { params: {} };
+        axios.get('/Bad_Path', config);
+        const typedConfig = { params: {} } as AxiosRequestConfig;
+        axios.get('/Bad_Path', typedConfig);
+        const query = 'k';
+        axios.get('/Bad_Path', query);
         map.set('Bad_Path', 1);
         emitter.on('Bad_Path', listener);
         app.get(\`/\${prefix}/Bad\`, handler);
@@ -136,6 +142,11 @@ ruleTester.run('valid-route-path', validRoutePath as unknown as import('eslint')
         app.on('GET', '/H', h);
         app.on(['GET', 'POST'], ['/I', '/ok', ...rest], h);
         app.get(\`/Template\`, h);
+        let reassigned = { params: {} };
+        app.get('/Let', reassigned);
+        const handlerFn = (c) => c.text('ok');
+        app.get('/Const', handlerFn);
+        app.get('/Imported', importedHandler);
       `,
       options: [{ mustNotMatch: '[A-Z]' }],
       errors: [
@@ -151,6 +162,10 @@ ruleTester.run('valid-route-path', validRoutePath as unknown as import('eslint')
         { messageId: 'mustNotMatch', data: { path: '/H', pattern: '[A-Z]' } },
         { messageId: 'mustNotMatch', data: { path: '/I', pattern: '[A-Z]' } },
         { messageId: 'mustNotMatch', data: { path: '/Template', pattern: '[A-Z]' } },
+        // A \`let\` may be reassigned, so it is still assumed to be a handler
+        { messageId: 'mustNotMatch', data: { path: '/Let', pattern: '[A-Z]' } },
+        { messageId: 'mustNotMatch', data: { path: '/Const', pattern: '[A-Z]' } },
+        { messageId: 'mustNotMatch', data: { path: '/Imported', pattern: '[A-Z]' } },
       ],
     },
   ],

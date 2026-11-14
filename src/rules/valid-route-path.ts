@@ -1,4 +1,4 @@
-import { TSESTree } from '@typescript-eslint/utils';
+import { ASTUtils, TSESTree } from '@typescript-eslint/utils';
 import { createRule } from '../utils';
 
 type Options = [
@@ -33,19 +33,26 @@ function getStaticString(node: TSESTree.Node | null | undefined): string | null 
   return null;
 }
 
-/**
- * Whether an argument can be a Hono handler or a sub-app. Literals and object
- * literals cannot, which is what separates `app.get('/a', handler)` from
- * look-alikes such as `axios.get('/a', { params })` or `map.set('k', 1)`.
- */
-function canBeHandler(node: TSESTree.CallExpressionArgument | undefined): boolean {
-  if (!node) return false;
-  return !(
-    node.type === 'Literal'
-    || node.type === 'TemplateLiteral'
-    || node.type === 'ObjectExpression'
-    || node.type === 'ArrayExpression'
-  );
+/** Node types that can never be a Hono handler or a sub-app. */
+const NON_HANDLER_TYPES = new Set<string>([
+  'Literal',
+  'TemplateLiteral',
+  'ObjectExpression',
+  'ArrayExpression',
+]);
+
+/** Strip TypeScript-only wrappers: `{ ... } as Config`, `{ ... } satisfies Config`. */
+function unwrapTypeAssertions(node: TSESTree.Node): TSESTree.Node {
+  let current = node;
+  while (
+    current.type === 'TSAsExpression'
+    || current.type === 'TSSatisfiesExpression'
+    || current.type === 'TSNonNullExpression'
+    || current.type === 'TSTypeAssertion'
+  ) {
+    current = current.expression;
+  }
+  return current;
 }
 
 /**
@@ -149,6 +156,35 @@ export const validRoutePath = createRule<Options, MessageIds>({
       .filter(entry => entry.words.length > 0);
 
     if (!mustMatch && !mustNotMatch && disallowedWords.length === 0) return {};
+
+    /**
+     * Whether an argument can be a Hono handler or a sub-app. Literals and
+     * object literals cannot, which is what separates `app.get('/a', handler)`
+     * from look-alikes such as `axios.get('/a', { params })` or
+     * `map.set('k', 1)`. An identifier is followed to its declaration when it
+     * is a `const` in this file, so `axios.get('/a', config)` with
+     * `const config = { params }` is excluded too. Anything that cannot be
+     * resolved (imports, parameters, `let`) is assumed to be a handler.
+     */
+    function canBeHandler(node: TSESTree.CallExpressionArgument | undefined): boolean {
+      if (!node) return false;
+      const value = unwrapTypeAssertions(node);
+      if (NON_HANDLER_TYPES.has(value.type)) return false;
+      if (value.type !== 'Identifier') return true;
+
+      const variable = ASTUtils.findVariable(context.sourceCode.getScope(value), value);
+      if (!variable || variable.defs.length !== 1) return true;
+      const def = variable.defs[0];
+      if (
+        def.type !== 'Variable'
+        || def.parent.kind !== 'const'
+        || def.node.id.type !== 'Identifier'
+        || !def.node.init
+      ) {
+        return true;
+      }
+      return !NON_HANDLER_TYPES.has(unwrapTypeAssertions(def.node.init).type);
+    }
 
     /**
      * Report the strongest violation only. The options are ranked

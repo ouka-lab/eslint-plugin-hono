@@ -13,7 +13,7 @@ The rule checks the static path string passed to:
 - `route` — `app.route('/books', books)`
 - `basePath` — `new Hono().basePath('/api')`
 
-Each path is checked as written in the call; it is not joined with a `basePath()` or `route()` prefix. Paths built from template literals with expressions and middleware paths passed to `use()` (which are usually wildcard filters such as `/api/*`) are not checked. Calls whose second argument cannot be a handler — `axios.get('/a', { params })`, `map.set('k', 1)` — are not treated as routes.
+Each path is checked as written in the call; it is not joined with a `basePath()` or `route()` prefix. Paths built from template literals with expressions and middleware paths passed to `use()` (which are usually wildcard filters such as `/api/*`) are not checked. Calls whose handler argument cannot be a handler — `axios.get('/a', { params })`, or `axios.get('/a', config)` where `config` is a `const` declared in the same file with an object, array, or literal value — are not treated as routes. An argument whose value cannot be seen (an import, a function parameter, a `let`) is assumed to be a handler, so `axios.get('/Bad', importedConfig)` is still checked.
 
 ## Options
 
