@@ -1,0 +1,43 @@
+name: Label PR
+
+# Labels each PR from its title prefix so that the release notes generated from
+# .github/release.yml are categorized without labeling by hand.
+#
+# pull_request_target is used so that PRs from forks get a token that can add
+# labels. It is safe here because the workflow never checks out or runs PR code;
+# it only reads the title from the event payload.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const labelsByPrefix = {
+              feature: 'feature',
+              fix: 'bug',
+              docs: 'documentation',
+              chore: 'chore',
+            };
+            const { title, number } = context.payload.pull_request;
+            const prefix = title.match(/^(\w+)\b/)?.[1].toLowerCase();
+            const label = labelsByPrefix[prefix];
+            if (!label) {
+              core.info(`No label for title: ${title}`);
+              return;
+            }
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: number,
+              labels: [label],
+            });
+            core.info(`Added label "${label}"`);

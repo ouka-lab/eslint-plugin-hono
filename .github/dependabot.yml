@@ -38,7 +38,7 @@ updates:
     cooldown:
       default-days: 7
     labels:
-      - "dependabot:playground"
+      - "dependencies"
     commit-message:
       prefix: "dependabot:playground"
     groups:
