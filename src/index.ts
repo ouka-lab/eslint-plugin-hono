@@ -11,6 +11,7 @@ import { noDuplicatePathParams } from './rules/no-duplicate-path-params';
 import { noDuplicateRoutes } from './rules/no-duplicate-routes';
 import { noCommentedOutRoute } from './rules/no-commented-out-route';
 import { maxReturn } from './rules/max-return';
+import { validRoutePath } from './rules/valid-route-path';
 
 const rules = {
   'route-grouping': routeGrouping,
@@ -24,6 +25,7 @@ const rules = {
   'no-duplicate-routes': noDuplicateRoutes,
   'no-commented-out-route': noCommentedOutRoute,
   'max-return': maxReturn,
+  'valid-route-path': validRoutePath,
 };
 
 const withPrefix = <R extends Linter.RulesRecord>(rules: R) =>
@@ -62,6 +64,7 @@ const allRules = {
   'no-duplicate-routes': 'error',
   'no-commented-out-route': 'warn',
   'max-return': 'warn',
+  'valid-route-path': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const plugin = {

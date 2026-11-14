@@ -88,6 +88,7 @@ Each rule links to its own documentation page.
 | [no-process-env](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/no-process-env.md) | Disallow the use of `process.env` in favor of `c.env` | | ⚠️ warn | |
 | [global-middleware-placement](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/global-middleware-placement.md) | Enforce that global middleware is placed before route definitions | | ⚠️ warn | |
 | [max-return](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/max-return.md) | Enforce a maximum number of `return` statements in a single route handler (default: 5) | | ⚠️ warn | |
+| [valid-route-path](https://github.com/ouka-lab/eslint-plugin-hono/blob/master/docs/rules/valid-route-path.md) | Enforce naming conventions on route paths (`mustMatch`, `mustNotMatch`, `disallowedWords`) | | ⚠️ warn | |
 
 `recommended` deliberately contains only the rules that catch real bugs and are safe for any Hono project. Stylistic rules (`route-grouping`, `global-middleware-placement`) and runtime-specific ones (`no-process-env` — `process.env` is perfectly valid on Node.js, Bun and Deno) are left out so that adding this plugin to an existing project does not flood it with errors.
 
