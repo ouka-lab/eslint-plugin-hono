@@ -47,6 +47,29 @@ ruleTester.run('max-return', maxReturn as unknown as import('eslint').Rule.RuleM
     `
       const value = map.get('key');
     `,
+    // Node-style event listeners share the method name but not the shape
+    `
+      emitter.on('data', (chunk) => {
+        ${returns(6)}
+      });
+    `,
+    `
+      function onMessage(message) {
+        ${returns(6)}
+      }
+      process.on('message', onMessage);
+    `,
+    // A path-less call is only a route when chained onto another route
+    `
+      something.get((x) => {
+        ${returns(6)}
+      });
+    `,
+    `
+      emitter.on('data', cb).get((x) => {
+        ${returns(6)}
+      });
+    `,
     // Named handler within the limit
     `
       const handler = (c) => {
@@ -185,6 +208,18 @@ ruleTester.run('max-return', maxReturn as unknown as import('eslint').Rule.RuleM
       `,
       options: [{ max: 1 }],
       errors: [{ messageId: 'tooManyReturns', line: 2 }],
+    },
+    // Path held in a constant
+    {
+      code: `
+        const PATH = '/items';
+        app.get(PATH, (c) => {
+          if (a) return c.text('a');
+          return c.text('b');
+        });
+      `,
+      options: [{ max: 1 }],
+      errors: [{ messageId: 'tooManyReturns', line: 3 }],
     },
   ],
 });

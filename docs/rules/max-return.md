@@ -11,6 +11,8 @@ The rule checks handlers passed to `get`, `post`, `put`, `patch`, `delete`, `opt
 - Inline functions: `app.get('/', (c) => { … })`.
 - Handlers passed by name, when they are defined in the same file as `function handler(c) { … }` or `const handler = (c) => { … }`. A handler used by several routes is reported once. Handlers bound with `let` / `var` (which may be reassigned) and imported handlers are not followed.
 
+Calls are recognized by Hono's signatures rather than by the method name alone, so event listeners such as `emitter.on('data', cb)` or `process.on('message', handler)` are not treated as routes: `on()` needs a method and a path before its handlers, and `get()` and friends need a path unless they are chained onto another route call.
+
 Only `return` statements that belong to the handler itself are counted; returns inside nested callbacks or helper functions are ignored. Expression-bodied arrow functions (`(c) => c.text('ok')`) have no `return` statements and are never reported.
 
 Inspired by [`vitest/max-expects`](https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md).

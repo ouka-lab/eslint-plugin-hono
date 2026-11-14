@@ -73,16 +73,6 @@ export const maxReturn = createRule<Options, MessageIds>({
       );
     }
 
-    function isRouteMethodCall(node: TSESTree.CallExpression): boolean {
-      const callee = node.callee;
-      return (
-        callee.type === 'MemberExpression'
-        && !callee.computed
-        && callee.property.type === 'Identifier'
-        && ROUTE_METHODS.has(callee.property.name)
-      );
-    }
-
     /**
      * Resolve an identifier passed as a handler (`app.get('/', handler)`) to
      * the function it names. Only `function handler() {}` and
@@ -103,6 +93,54 @@ export const maxReturn = createRule<Options, MessageIds>({
         && isFunctionNode(def.node.init)
       ) {
         return def.node.init;
+      }
+      return null;
+    }
+
+    /** The function an argument refers to, inline or by name. */
+    function toHandler(arg: TSESTree.CallExpressionArgument): FunctionNode | null {
+      if (isFunctionNode(arg)) return arg;
+      if (arg.type === 'Identifier') return resolveHandler(arg);
+      return null;
+    }
+
+    /**
+     * The handler-position arguments of a Hono route call, or `null` when the
+     * call does not have the shape of one. The method name alone is not
+     * enough — `emitter.on('data', cb)` and `map.get(key)` share it — so the
+     * arguments have to match Hono's signatures:
+     *
+     * - `on(method, path, ...handlers)`: two non-handler arguments first.
+     * - `get(path, ...handlers)` and friends: a non-handler first argument,
+     *   unless the call is chained onto another route call
+     *   (`app.get('/a', h).post(h2)`), where Hono lets the path be omitted.
+     */
+    function getHandlerArgs(
+      node: TSESTree.CallExpression,
+    ): TSESTree.CallExpressionArgument[] | null {
+      const callee = node.callee;
+      if (
+        callee.type !== 'MemberExpression'
+        || callee.computed
+        || callee.property.type !== 'Identifier'
+        || !ROUTE_METHODS.has(callee.property.name)
+      ) {
+        return null;
+      }
+      const args = node.arguments;
+
+      if (callee.property.name === 'on') {
+        if (args.length < 3 || toHandler(args[0]) || toHandler(args[1])) {
+          return null;
+        }
+        return args.slice(2);
+      }
+
+      if (args.length >= 2 && !toHandler(args[0])) return args.slice(1);
+
+      const receiver = callee.object;
+      if (receiver.type === 'CallExpression' && getHandlerArgs(receiver)) {
+        return args;
       }
       return null;
     }
@@ -130,15 +168,11 @@ export const maxReturn = createRule<Options, MessageIds>({
         if (owner) returnCounts.set(owner, (returnCounts.get(owner) ?? 0) + 1);
       },
       CallExpression(node) {
-        if (!isRouteMethodCall(node)) return;
-        for (const arg of node.arguments) {
-          if (isFunctionNode(arg)) {
-            handlers.add(arg);
-          }
-          else if (arg.type === 'Identifier') {
-            const fn = resolveHandler(arg);
-            if (fn) handlers.add(fn);
-          }
+        const args = getHandlerArgs(node);
+        if (!args) return;
+        for (const arg of args) {
+          const handler = toHandler(arg);
+          if (handler) handlers.add(handler);
         }
       },
       // Handlers are usually defined before the route that uses them, so
