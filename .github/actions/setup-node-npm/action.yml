@@ -17,8 +17,8 @@ runs:
     - name: Install pinned npm
       shell: bash
       env:
-        NPM_VERSION: 11.17.0
-        NPM_SHA512: 3eeaf18997b11070d313849268b23766b9db0068997dec9471073170fe43fa17f2b4d0337bf0f52330ee2274e7f5754b21b01052742e48f5c9c74d8b1e32ef43
+        NPM_VERSION: 12.2.2
+        NPM_SHA512: 2a09606d9c9a71fee31fe147b8d46a56e0b3422f15848d9aec9f3b231e3716c3d3b99a065a62175c6759b4150e03bf6fc0bf8825112a511573ba903b3ec41370
       run: |
         set -euo pipefail
         curl -fsSL -o "$RUNNER_TEMP/npm.tgz" "https://registry.npmjs.org/npm/-/npm-${NPM_VERSION}.tgz"
