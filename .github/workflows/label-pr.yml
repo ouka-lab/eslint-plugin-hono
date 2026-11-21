@@ -23,13 +23,14 @@ jobs:
         with:
           script: |
             const labelsByPrefix = {
+              'new-rule': 'new-rule',
               feature: 'feature',
               fix: 'bug',
               docs: 'documentation',
               chore: 'chore',
             };
             const { title, number } = context.payload.pull_request;
-            const prefix = title.match(/^(\w+)\b/)?.[1].toLowerCase();
+            const prefix = title.match(/^([\w-]+)/)?.[1].toLowerCase();
             const label = labelsByPrefix[prefix];
             if (!label) {
               core.info(`No label for title: ${title}`);
