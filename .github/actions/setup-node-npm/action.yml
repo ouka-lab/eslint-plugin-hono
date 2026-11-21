@@ -1,5 +1,5 @@
 name: Setup Node.js and npm
-description: Set up Node.js and install a version-pinned, checksum-verified npm.
+description: Set up Node.js, install a version-pinned, checksum-verified npm, and install Socket Firewall (sfw).
 
 inputs:
   node-version:
@@ -25,3 +25,53 @@ runs:
         echo "${NPM_SHA512}  $RUNNER_TEMP/npm.tgz" | sha512sum -c -
         npm install -g --ignore-scripts "$RUNNER_TEMP/npm.tgz"
         npm --version
+
+    # Socket Firewall Free (https://socket.dev/features/firewall).
+    # The binary is ~130 MB, so it is cached per version + checksum. Bump
+    # SFW_VERSION and SFW_SHA256 together (sha256 is shown as the asset digest
+    # on https://github.com/SocketDev/sfw-free/releases). Linux x86_64 only.
+    - name: Resolve Socket Firewall version
+      id: sfw
+      shell: bash
+      env:
+        SFW_VERSION: v1.16.0
+        SFW_SHA256: 1f24d2628aeb3995f1f2651509e37641c7c41d07749ac68594ecb5bb2dd44d8a
+      run: |
+        set -euo pipefail
+        {
+          echo "version=${SFW_VERSION}"
+          echo "sha256=${SFW_SHA256}"
+          echo "dir=${RUNNER_TOOL_CACHE}/sfw/${SFW_VERSION}"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Restore Socket Firewall from cache
+      id: sfw-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.sfw.outputs.dir }}
+        key: sfw-${{ runner.os }}-${{ runner.arch }}-${{ steps.sfw.outputs.version }}-${{ steps.sfw.outputs.sha256 }}
+
+    - name: Download Socket Firewall
+      if: steps.sfw-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        SFW_VERSION: ${{ steps.sfw.outputs.version }}
+        SFW_SHA256: ${{ steps.sfw.outputs.sha256 }}
+        SFW_DIR: ${{ steps.sfw.outputs.dir }}
+      run: |
+        set -euo pipefail
+        mkdir -p "$SFW_DIR"
+        curl -fsSL -o "$SFW_DIR/sfw" "https://github.com/SocketDev/sfw-free/releases/download/${SFW_VERSION}/sfw-free-linux-x86_64"
+        echo "${SFW_SHA256}  $SFW_DIR/sfw" | sha256sum -c -
+        chmod +x "$SFW_DIR/sfw"
+
+    - name: Add Socket Firewall to PATH
+      shell: bash
+      env:
+        SFW_SHA256: ${{ steps.sfw.outputs.sha256 }}
+        SFW_DIR: ${{ steps.sfw.outputs.dir }}
+      run: |
+        set -euo pipefail
+        # Re-verify on cache hits too, so a poisoned cache entry cannot run.
+        echo "${SFW_SHA256}  $SFW_DIR/sfw" | sha256sum -c -
+        echo "$SFW_DIR" >> "$GITHUB_PATH"
