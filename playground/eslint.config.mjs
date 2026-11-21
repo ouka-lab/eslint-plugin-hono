@@ -23,4 +23,14 @@ export default [
     ...hono.configs.all,
     files: ['src/**/*.ts'],
   },
+  {
+    // hono-instance-name has no convention by default, so with `all` it would
+    // warn "no naming convention is enforced" in every sample. Its own sample
+    // configures one inline instead.
+    files: ['src/**/*.ts'],
+    ignores: ['src/hono-instance-name.ts'],
+    rules: {
+      'hono/hono-instance-name': 'off',
+    },
+  },
 ];
