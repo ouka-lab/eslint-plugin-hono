@@ -3,6 +3,11 @@ changelog:
     labels:
       - ignore-for-release
   categories:
+    # Listed first on purpose: a PR goes into the first category it matches,
+    # and new rules are what release-note readers care about most.
+    - title: ✨ New Rules
+      labels:
+        - new-rule
     - title: 🚀 Features
       labels:
         - feature
