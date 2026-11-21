@@ -13,6 +13,7 @@ import { noCommentedOutRoute } from './rules/no-commented-out-route';
 import { maxReturn } from './rules/max-return';
 import { validRoutePath } from './rules/valid-route-path';
 import { maxPathNameLength } from './rules/max-path-name-length';
+import { basepathVariableName } from './rules/basepath-variable-name';
 
 const rules = {
   'route-grouping': routeGrouping,
@@ -28,6 +29,7 @@ const rules = {
   'max-return': maxReturn,
   'valid-route-path': validRoutePath,
   'max-path-name-length': maxPathNameLength,
+  'basepath-variable-name': basepathVariableName,
 };
 
 const withPrefix = <R extends Linter.RulesRecord>(rules: R) =>
@@ -69,6 +71,7 @@ const allRules = {
   'max-return': 'warn',
   'valid-route-path': 'warn',
   'max-path-name-length': 'warn',
+  'basepath-variable-name': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const plugin = {
