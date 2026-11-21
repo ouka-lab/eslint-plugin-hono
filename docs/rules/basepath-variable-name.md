@@ -29,7 +29,7 @@ The expected name is built from the path as written in the call. It is not joine
 
 Paths that have no usable name are skipped: `/`, paths with a parameter (`/:tenant`), a wildcard or a regexp, template literals with expressions, and paths whose name would not be a valid variable name (`/2024`, `/delete`, `/new`).
 
-The fix renames the variable and every reference to it in the file, including `typeof` type queries. A shorthand property keeps its key (`{ app }` becomes `{ app: api }`). The rule still reports the variable but does not fix it when it is exported (renaming would change the module's public API), or when the expected name is already in use where the variable is visible. The fix always renames to the exact expected name, without any configured prefix or suffix.
+The fix renames the variable and every reference to it in the file, including `typeof` type queries. A shorthand property keeps its key (`{ app }` becomes `{ app: api }`, and `({ app = fallback } = obj)` becomes `({ app: api = fallback } = obj)`). The rule still reports the variable but does not fix it when it is exported (renaming would change the module's public API), when the expected name is already in use where the variable is visible, or when a type of the same name shares the binding (`type App = ...; const App = ...`). When two variables in overlapping scopes ask for the same name, only one is renamed per `--fix` pass; the other is then reported as a name collision and left for you to resolve. The fix always renames to the exact expected name, without any configured prefix or suffix.
 
 ## Options
 

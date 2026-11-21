@@ -83,6 +83,19 @@ function getMethodCall(
   return { name: node.callee.property.name, object: node.callee.object };
 }
 
+/**
+ * Whether an identifier is the value of a shorthand property, where the name
+ * is also the key: `{ app }`, `({ app } = x)` or `({ app = fallback } = x)`.
+ */
+function isShorthandValue(identifier: TSESTree.Node): boolean {
+  let value: TSESTree.Node = identifier;
+  if (value.parent?.type === 'AssignmentPattern' && value.parent.left === value) {
+    value = value.parent;
+  }
+  const property = value.parent;
+  return property?.type === 'Property' && property.shorthand && property.value === value;
+}
+
 function upperFirst(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
@@ -231,6 +244,10 @@ export const basepathVariableName = createRule<Options, MessageIds>({
         .find(candidate => candidate.name === id.name);
       if (!variable) return null;
 
+      // `type App = ...; const App = ...` share one variable whose references
+      // include type annotations; renaming them would orphan the type.
+      if (variable.defs.length !== 1) return null;
+
       if (declarator.parent.parent?.type === 'ExportNamedDeclaration') return null;
       if (variable.references.some(reference => reference.identifier.parent?.type === 'ExportSpecifier')) {
         return null;
@@ -250,21 +267,36 @@ export const basepathVariableName = createRule<Options, MessageIds>({
         ...variable.references.map(reference => reference.identifier),
       ]);
 
-      return (fixer) => {
-        const fixes: TSESLint.RuleFix[] = [];
-        for (const identifier of identifiers) {
+      const replacements = [...identifiers]
+        .map((identifier) => {
           // Only the name itself: a declared identifier's range also covers
           // its type annotation (`const app: Hono = ...`).
-          const range: TSESTree.Range = [
-            identifier.range[0],
-            identifier.range[0] + identifier.name.length,
-          ];
-          const parent = identifier.parent;
-          const shorthand = parent?.type === 'Property' && parent.shorthand && parent.value === identifier;
-          // `{ app }` keeps its key: `{ app: api }`.
-          fixes.push(fixer.replaceTextRange(range, shorthand ? `${identifier.name}: ${expected}` : expected));
+          const start = identifier.range[0];
+          const end = start + identifier.name.length;
+          // `{ app }` and `{ app = fallback }` keep their key: `{ app: api }`.
+          const text = isShorthandValue(identifier) ? `${identifier.name}: ${expected}` : expected;
+          return { start, end, text };
+        })
+        .sort((a, b) => a.start - b.start);
+
+      // The fix replaces the whole scope block, not just the identifiers, so
+      // two reports that would introduce the same name in overlapping scopes
+      // (`const first = …basePath('/api'); const second = …basePath('/api')`)
+      // overlap and are never applied in the same pass.
+      const block = variable.scope.block;
+      const blockStart = Math.min(block.range[0], ...replacements.map(r => r.start));
+      const blockEnd = Math.max(block.range[1], ...replacements.map(r => r.end));
+      const text = sourceCode.text;
+
+      return (fixer) => {
+        let output = '';
+        let cursor = blockStart;
+        for (const { start, end, text: replacement } of replacements) {
+          output += text.slice(cursor, start) + replacement;
+          cursor = end;
         }
-        return fixes;
+        output += text.slice(cursor, blockEnd);
+        return fixer.replaceTextRange([blockStart, blockEnd], output);
       };
     }
 

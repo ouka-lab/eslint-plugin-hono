@@ -207,6 +207,84 @@ ruleTester.run('basepath-variable-name', basepathVariableName as unknown as impo
       `,
       errors: [error('app', 'api', '/api')],
     },
+    // A defaulted shorthand in a destructuring assignment keeps its key too
+    {
+      code: `
+        let app = new Hono().basePath('/api');
+        ({ app = fallback } = replacement);
+        ({ app } = replacement);
+      `,
+      output: `
+        let api = new Hono().basePath('/api');
+        ({ app: api = fallback } = replacement);
+        ({ app: api } = replacement);
+      `,
+      errors: [error('app', 'api', '/api')],
+    },
+    // Two reports asking for the same name are fixed one pass at a time,
+    // so they never create duplicate declarations
+    {
+      code: `
+        const first = new Hono().basePath('/api');
+        const second = new Hono().basePath('/api');
+      `,
+      output: `
+        const api = new Hono().basePath('/api');
+        const second = new Hono().basePath('/api');
+      `,
+      errors: [error('first', 'api', '/api'), error('second', 'api', '/api')],
+    },
+    {
+      code: `
+        const first = new Hono().basePath('/api');
+        function f() {
+          const second = new Hono().basePath('/api');
+          return [first, second];
+        }
+      `,
+      output: `
+        const api = new Hono().basePath('/api');
+        function f() {
+          const second = new Hono().basePath('/api');
+          return [api, second];
+        }
+      `,
+      errors: [error('first', 'api', '/api'), error('second', 'api', '/api')],
+    },
+    // Reports in unrelated scopes are fixed together
+    {
+      code: `
+        function f() {
+          const first = new Hono().basePath('/api');
+          return first;
+        }
+        function g() {
+          const second = new Hono().basePath('/api');
+          return second;
+        }
+      `,
+      output: `
+        function f() {
+          const api = new Hono().basePath('/api');
+          return api;
+        }
+        function g() {
+          const api = new Hono().basePath('/api');
+          return api;
+        }
+      `,
+      errors: [error('first', 'api', '/api'), error('second', 'api', '/api')],
+    },
+    // A type and a value sharing one name: reported but not fixed
+    {
+      code: `
+        type App = { ok: true };
+        const App = new Hono().basePath('/api');
+        const value: App = { ok: true };
+      `,
+      output: null,
+      errors: [error('App', 'api', '/api')],
+    },
     // Exported names are public API: reported but not fixed
     {
       code: `export const app = new Hono().basePath('/api');`,
