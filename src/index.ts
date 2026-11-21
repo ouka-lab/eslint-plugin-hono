@@ -14,6 +14,7 @@ import { maxReturn } from './rules/max-return';
 import { validRoutePath } from './rules/valid-route-path';
 import { maxPathNameLength } from './rules/max-path-name-length';
 import { basepathVariableName } from './rules/basepath-variable-name';
+import { honoInstanceName } from './rules/hono-instance-name';
 
 const rules = {
   'route-grouping': routeGrouping,
@@ -30,6 +31,7 @@ const rules = {
   'valid-route-path': validRoutePath,
   'max-path-name-length': maxPathNameLength,
   'basepath-variable-name': basepathVariableName,
+  'hono-instance-name': honoInstanceName,
 };
 
 const withPrefix = <R extends Linter.RulesRecord>(rules: R) =>
@@ -72,6 +74,7 @@ const allRules = {
   'valid-route-path': 'warn',
   'max-path-name-length': 'warn',
   'basepath-variable-name': 'warn',
+  'hono-instance-name': 'warn',
 } as const satisfies Linter.RulesRecord;
 
 const plugin = {
