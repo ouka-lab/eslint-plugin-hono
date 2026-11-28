@@ -16,6 +16,6 @@
     "eslint-plugin-hono": "file:..",
     "hono": "^4.13.18",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.72.2"
+    "typescript-eslint": "^8.73.0"
   }
 }
